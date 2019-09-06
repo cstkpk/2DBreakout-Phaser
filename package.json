@@ -1,0 +1,23 @@
+{
+  "name": "2DBreakout-Phaser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cstkpk/2DBreakout-Phaser.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cstkpk/2DBreakout-Phaser/issues"
+  },
+  "homepage": "https://github.com/cstkpk/2DBreakout-Phaser#readme",
+  "dependencies": {
+    "phaser-ce": "^2.13.2"
+  }
+}

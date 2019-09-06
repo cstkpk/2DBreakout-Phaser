@@ -23,7 +23,15 @@ function create() {
     ball.body.collideWorldBounds = true;
     ball.body.bounce.set(1);
     ball.body.velocity.set(150, -150);
-    
+
+    // Checking whether the ball has hit the bottom wall
+    game.physics.arcade.checkCollision.down = false;
+    ball.checkWorldBounds = true;
+    ball.events.onOutOfBounds.add(function() {
+        alert("Game over!");
+        location.reload();
+    }, console.log(this));
+
     paddle = game.add.sprite(game.world.width * 0.5, game.world.height-5, "paddle");
     paddle.anchor.set(0.5, 1);
     game.physics.enable(paddle, Phaser.Physics.ARCADE);

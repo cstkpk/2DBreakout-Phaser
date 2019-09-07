@@ -46,6 +46,17 @@ const ballHitBrick = (ball, brick) => {
     brick.kill();
     score += 10;
     scoreText.setText(`Points: ${score}`);
+
+    let count_alive = 0;
+    for (let i = 0; i < bricks.children.length; i++) {
+        if (bricks.children[i].alive === true) {
+            count_alive++;
+        }
+    }
+    if (count_alive === 0) {
+        alert(`You've won the game with ${score} points!`);
+        location.reload();
+    }
 }
 
 function preload() {

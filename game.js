@@ -39,6 +39,9 @@ const initBricks = () => {
     }
 };
 
+// Callback function used in update function to remove brick when hit by ball
+const ballHitBrick = (ball, brick) => brick.kill();
+
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
@@ -76,6 +79,7 @@ function create() {
 
 function update() {
     game.physics.arcade.collide(ball, paddle);
+    game.physics.arcade.collide(ball, bricks, ballHitBrick);
     // Sets paddle position to input position (mouse or touch) or defaults to the center
     paddle.x = game.input.x || game.world.width * 0.5;
 };

@@ -8,6 +8,8 @@ let paddle;
 let bricks;
 let newBrick;
 let brickInfo;
+let scoreText;
+let score = 0;
 
 const initBricks = () => {
     brickInfo = {
@@ -40,7 +42,11 @@ const initBricks = () => {
 };
 
 // Callback function used in update function to remove brick when hit by ball
-const ballHitBrick = (ball, brick) => brick.kill();
+const ballHitBrick = (ball, brick) => {
+    brick.kill();
+    score += 10;
+    scoreText.setText(`Points: ${score}`);
+}
 
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -75,6 +81,8 @@ function create() {
     paddle.body.immovable = true;
 
     initBricks();
+
+    scoreText = game.add.text(5, 5, `Points: ${score}`, {font: "18px Arial", fill: "#0095DD"});
 };
 
 function update() {

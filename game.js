@@ -10,6 +10,9 @@ let newBrick;
 let brickInfo;
 let scoreText;
 let score = 0;
+let lives = 3;
+let livesText;
+let lifeLostText;
 
 const initBricks = () => {
     brickInfo = {
@@ -59,6 +62,25 @@ const ballHitBrick = (ball, brick) => {
     }
 }
 
+// Callback function to trigger events when the ball hits the bottom wall
+const ballLeaveScreen = () => {
+    lives--;
+    if (lives) {
+        livesText.setText(`Lives: ${lives}`);
+        lifeLostText.visible = true;
+        ball.reset(game.world.width * 0.5, game.world.height - 25);
+        paddle.reset(game.world.width * 0.5, game.world.height - 5);
+        game.input.onDown.addOnce(() => {
+            lifeLostText.visible = false;
+            ball.body.velocity.set(150, -150);
+        }, this);
+    }
+    else {
+        alert("You lost, game over!");
+        location.reload();
+    }
+}
+
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.pageAlignHorizontally = true;
@@ -81,10 +103,7 @@ function create() {
     // Checking whether the ball has hit the bottom wall
     game.physics.arcade.checkCollision.down = false;
     ball.checkWorldBounds = true;
-    ball.events.onOutOfBounds.add(function() {
-        alert("Game over!");
-        location.reload();
-    }, console.log(this));
+    ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
     paddle = game.add.sprite(game.world.width * 0.5, game.world.height-5, "paddle");
     paddle.anchor.set(0.5, 1);
@@ -93,7 +112,15 @@ function create() {
 
     initBricks();
 
-    scoreText = game.add.text(5, 5, `Points: ${score}`, {font: "18px Arial", fill: "#0095DD"});
+    textStyle = {font: "18px Arial", fill: "#0095DD"};
+    // Display score
+    scoreText = game.add.text(5, 5, `Points: ${score}`, textStyle);
+    // Display lives
+    livesText = game.add.text(game.world.width - 5, 5, `Lives: ${lives}`, textStyle);
+    livesText.anchor.set(1, 0);
+    lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, "Life lost, click to continue", textStyle);
+    lifeLostText.anchor.set(0.5);
+    lifeLostText.visible = false;
 };
 
 function update() {

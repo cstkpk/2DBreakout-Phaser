@@ -76,7 +76,7 @@ const ballLeaveScreen = () => {
         game.input.onDown.addOnce(() => {
             lifeLostText.visible = false;
             playing = true;
-            ball.body.velocity.set(150, -150);
+            ball.body.velocity.set(180, -180);
         }, this);
     }
     else {
@@ -86,12 +86,20 @@ const ballLeaveScreen = () => {
 };
 
 // Callback function to call the ball wobble animation when the ball hits the paddle
-const ballHitPaddle = () => ball.animations.play("wobble");
+const ballHitPaddle = () => {
+    ball.animations.play("wobble");
+    ball.body.velocity.x = -1 * 5 * (paddle.x - ball.x);
+    if (ball.x > paddle.x || ball.x < paddle.x) {
+        ball.body.velocity.x = -1 * 5 * (paddle.x - ball.x);
+    } else {
+    ball.body.velocity.x = Math.random() * 8 + 2;
+    };
+};
 
 // Callback function to start the game when start button is pressed
 const startGame = () => {
     startButton.destroy();
-    ball.body.velocity.set(150, -150);
+    ball.body.velocity.set(180, -180);
     playing = true;
 };
 

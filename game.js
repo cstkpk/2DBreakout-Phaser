@@ -13,6 +13,8 @@ let score = 0;
 let lives = 3;
 let livesText;
 let lifeLostText;
+let playing = false;
+let startButton;
 
 const initBricks = () => {
     brickInfo = {
@@ -70,19 +72,28 @@ const ballLeaveScreen = () => {
         lifeLostText.visible = true;
         ball.reset(game.world.width * 0.5, game.world.height - 25);
         paddle.reset(game.world.width * 0.5, game.world.height - 5);
+        playing = false;
         game.input.onDown.addOnce(() => {
             lifeLostText.visible = false;
+            playing = true;
             ball.body.velocity.set(150, -150);
         }, this);
     }
     else {
         alert("You lost, game over!");
         location.reload();
-    }
-}
+    };
+};
 
-// Callback function to call the ball wobble animatio when the ball hits the paddle
+// Callback function to call the ball wobble animation when the ball hits the paddle
 const ballHitPaddle = () => ball.animations.play("wobble");
+
+// Callback function to start the game when start button is pressed
+const startGame = () => {
+    startButton.destroy();
+    ball.body.velocity.set(150, -150);
+    playing = true;
+};
 
 function preload() {
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -93,6 +104,7 @@ function preload() {
     game.load.image("paddle", "img/paddle.png");
     game.load.image("brick", "img/brick.png");
     game.load.spritesheet("ball", "img/wobble.png", 20, 20);
+    game.load.spritesheet("button", "img/button.png", 120, 40);
 };
 
 function create() {
@@ -103,7 +115,6 @@ function create() {
     game.physics.enable(ball, Phaser.Physics.ARCADE);
     ball.body.collideWorldBounds = true;
     ball.body.bounce.set(1);
-    ball.body.velocity.set(150, -150);
 
     // Checking whether the ball has hit the bottom wall
     game.physics.arcade.checkCollision.down = false;
@@ -126,11 +137,17 @@ function create() {
     lifeLostText = game.add.text(game.world.width * 0.5, game.world.height * 0.5, "Life lost, click to continue", textStyle);
     lifeLostText.anchor.set(0.5);
     lifeLostText.visible = false;
+
+    // Start button
+    startButton = game.add.button(game.world.width * 0.5, game.world.height * 0.5, "button", startGame, this, 1, 0, 2);
+    startButton.anchor.set(0.5);
 };
 
 function update() {
     game.physics.arcade.collide(ball, paddle, ballHitPaddle);
     game.physics.arcade.collide(ball, bricks, ballHitBrick);
     // Sets paddle position to input position (mouse or touch) or defaults to the center
-    paddle.x = game.input.x || game.world.width * 0.5;
+    if (playing) {
+        paddle.x = game.input.x || game.world.width * 0.5;
+    };
 };

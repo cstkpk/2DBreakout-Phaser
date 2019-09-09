@@ -46,21 +46,21 @@ const initBricks = () => {
 
 // Callback function used in update function to remove brick when hit by ball
 const ballHitBrick = (ball, brick) => {
-    brick.kill();
+    const killTween = game.add.tween(brick.scale);
+    killTween.to({x:0, y:0}, 200, Phaser.Easing.Linear.None);
+    killTween.onComplete.addOnce(() => {
+        brick.kill();
+    }, this);
+    killTween.start();
+    
     score += 10;
     scoreText.setText(`Points: ${score}`);
 
-    let count_alive = 0;
-    for (let i = 0; i < bricks.children.length; i++) {
-        if (bricks.children[i].alive === true) {
-            count_alive++;
-        }
-    }
-    if (count_alive === 0) {
-        alert(`You've won the game with ${score} points!`);
+    if (score === brickInfo.count.row * brickInfo.count.col * 10) {
+        alert ("You've won the game!");
         location.reload();
-    }
-}
+    };
+};
 
 // Callback function to trigger events when the ball hits the bottom wall
 const ballLeaveScreen = () => {
